@@ -1,5 +1,6 @@
 import { Check, Palette } from "lucide-react";
 
+import { THEMES } from "@/config/theme";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +8,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { THEMES, useTheme } from "./theme-provider";
+import { ThemePreview } from "./theme-preview";
+import { useTheme } from "./theme-provider";
 
+/** Dropdown-based theme switcher with inline interactive preview chips. */
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
   const active = THEMES.find((t) => t.id === theme);
@@ -23,9 +26,10 @@ export function ThemeSwitcher() {
         <span className="hidden sm:inline">{active?.label}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60 rounded-none">
-        <DropdownMenuLabel className="label-eyebrow text-muted-foreground">
-          Theme
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="label-eyebrow text-muted-foreground">Theme</DropdownMenuLabel>
+        <div className="px-2 pb-2">
+          <ThemePreview activeTheme={theme} onSelect={setTheme} />
+        </div>
         {THEMES.map((item) => (
           <DropdownMenuItem
             key={item.id}

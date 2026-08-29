@@ -16,6 +16,15 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
@@ -66,6 +75,8 @@ export function SiteHeader() {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               aria-label="Open menu"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
               className="inline-flex size-11 items-center justify-center border border-border text-foreground lg:hidden"
             >
               <Menu className="size-5" aria-hidden="true" />
@@ -83,7 +94,7 @@ export function SiteHeader() {
                   <X className="size-5" aria-hidden="true" />
                 </button>
               </div>
-              <nav aria-label="Mobile" className="px-5 py-6">
+              <nav id="mobile-nav" aria-label="Mobile" className="px-5 py-6">
                 <ul className="space-y-1">
                   {[...navigation, { label: "Contact", href: "#contact" }].map((item) => (
                     <li key={item.href}>

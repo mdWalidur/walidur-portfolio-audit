@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { profile } from "@/data/portfolio";
 import { Reveal, SectionHeading } from "./reveal";
+import { PortfolioSection } from "./section";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name.").max(80),
@@ -53,175 +54,164 @@ export function Contact() {
   }
 
   return (
-    <section
-      id="contact"
-      aria-labelledby="contact-heading"
-      className="scroll-mt-20 border-b border-border px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
-    >
-      <div className="mx-auto max-w-[1440px]">
-        <SectionHeading
-          id="contact-heading"
-          eyebrow="Contact"
-          title="Open to internships and junior developer roles."
-          intro="Tell me what you are building. The form opens your email client with the message prefilled — nothing is stored or sent through a third party."
-        />
+    <PortfolioSection id="contact" labelledBy="contact-heading">
+      <SectionHeading
+        id="contact-heading"
+        eyebrow="Contact"
+        title="Open to internships and junior developer roles."
+        intro="Tell me what you are building. The form opens your email client with the message prefilled — nothing is stored or sent through a third party."
+      />
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.75fr)] lg:gap-16">
-          <Reveal>
-            <form onSubmit={onSubmit} noValidate className="space-y-5">
-              <div
-                className="absolute left-[-9999px] size-px overflow-hidden"
-                aria-hidden="true"
-              >
-                <label htmlFor="company">Company (leave empty)</label>
-                <input id="company" name="company" tabIndex={-1} autoComplete="off" />
-              </div>
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.75fr)] lg:gap-16">
+        <Reveal>
+          <form onSubmit={onSubmit} noValidate className="space-y-5">
+            <div className="absolute left-[-9999px] size-px overflow-hidden" aria-hidden="true">
+              <label htmlFor="company">Company (leave empty)</label>
+              <input id="company" name="company" tabIndex={-1} autoComplete="off" />
+            </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="label-eyebrow text-muted-foreground">
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    autoComplete="name"
-                    aria-invalid={!!errors.name}
-                    aria-describedby={errors.name ? "name-error" : undefined}
-                    className={`mt-2 ${fieldClass}`}
-                    placeholder="Your name"
-                  />
-                  {errors.name ? (
-                    <p id="name-error" className="mt-2 text-xs text-destructive">
-                      {errors.name}
-                    </p>
-                  ) : null}
-                </div>
-                <div>
-                  <label htmlFor="email" className="label-eyebrow text-muted-foreground">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    aria-invalid={!!errors.email}
-                    aria-describedby={errors.email ? "email-error" : undefined}
-                    className={`mt-2 ${fieldClass}`}
-                    placeholder="you@example.com"
-                  />
-                  {errors.email ? (
-                    <p id="email-error" className="mt-2 text-xs text-destructive">
-                      {errors.email}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label htmlFor="subject" className="label-eyebrow text-muted-foreground">
-                  Subject
+                <label htmlFor="name" className="label-eyebrow text-muted-foreground">
+                  Name
                 </label>
                 <input
-                  id="subject"
-                  name="subject"
-                  aria-invalid={!!errors.subject}
-                  aria-describedby={errors.subject ? "subject-error" : undefined}
+                  id="name"
+                  name="name"
+                  autoComplete="name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                   className={`mt-2 ${fieldClass}`}
-                  placeholder="Internship opportunity"
+                  placeholder="Your name"
                 />
-                {errors.subject ? (
-                  <p id="subject-error" className="mt-2 text-xs text-destructive">
-                    {errors.subject}
+                {errors.name ? (
+                  <p id="name-error" className="mt-2 text-xs text-destructive">
+                    {errors.name}
                   </p>
                 ) : null}
               </div>
-
               <div>
-                <label htmlFor="message" className="label-eyebrow text-muted-foreground">
-                  Message
+                <label htmlFor="email" className="label-eyebrow text-muted-foreground">
+                  Email
                 </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={6}
-                  aria-invalid={!!errors.message}
-                  aria-describedby={errors.message ? "message-error" : undefined}
-                  className={`mt-2 ${fieldClass} resize-y`}
-                  placeholder="A few sentences about the role or project."
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  className={`mt-2 ${fieldClass}`}
+                  placeholder="you@example.com"
                 />
-                {errors.message ? (
-                  <p id="message-error" className="mt-2 text-xs text-destructive">
-                    {errors.message}
+                {errors.email ? (
+                  <p id="email-error" className="mt-2 text-xs text-destructive">
+                    {errors.email}
                   </p>
                 ) : null}
               </div>
-
-              <div className="flex flex-wrap items-center gap-4">
-                <button
-                  type="submit"
-                  className="inline-flex min-h-12 items-center gap-2 bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-                >
-                  <Send className="size-4" aria-hidden="true" />
-                  Compose message
-                </button>
-                <p aria-live="polite" className="text-xs text-muted-foreground">
-                  {status === "sent"
-                    ? "Your email client should now be open with the message ready to send."
-                    : ""}
-                </p>
-              </div>
-            </form>
-          </Reveal>
-
-          <Reveal delay={100} className="space-y-px border border-border bg-border">
-            <a
-              href={`mailto:${profile.email}`}
-              className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
-            >
-              <Mail className="size-5 shrink-0" aria-hidden="true" />
-              <span className="min-w-0">
-                <span className="label-eyebrow block text-muted-foreground">Email</span>
-                <span className="block truncate text-sm">{profile.email}</span>
-              </span>
-            </a>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
-            >
-              <Linkedin className="size-5 shrink-0" aria-hidden="true" />
-              <span className="min-w-0">
-                <span className="label-eyebrow block text-muted-foreground">LinkedIn</span>
-                <span className="block truncate text-sm">Md Walidur Rahman</span>
-              </span>
-              <ArrowUpRight className="ml-auto size-4 shrink-0" aria-hidden="true" />
-            </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
-            >
-              <Github className="size-5 shrink-0" aria-hidden="true" />
-              <span className="min-w-0">
-                <span className="label-eyebrow block text-muted-foreground">GitHub</span>
-                <span className="block truncate text-sm">mdWalidur</span>
-              </span>
-              <ArrowUpRight className="ml-auto size-4 shrink-0" aria-hidden="true" />
-            </a>
-            <div className="bg-background p-5">
-              <span className="label-eyebrow block text-muted-foreground">Based in</span>
-              <span className="mt-1 block text-sm">{profile.location}</span>
-              <span className="mt-3 block text-sm text-muted-foreground">
-                {profile.availability}
-              </span>
             </div>
-          </Reveal>
-        </div>
+
+            <div>
+              <label htmlFor="subject" className="label-eyebrow text-muted-foreground">
+                Subject
+              </label>
+              <input
+                id="subject"
+                name="subject"
+                aria-invalid={!!errors.subject}
+                aria-describedby={errors.subject ? "subject-error" : undefined}
+                className={`mt-2 ${fieldClass}`}
+                placeholder="Internship opportunity"
+              />
+              {errors.subject ? (
+                <p id="subject-error" className="mt-2 text-xs text-destructive">
+                  {errors.subject}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <label htmlFor="message" className="label-eyebrow text-muted-foreground">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={6}
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? "message-error" : undefined}
+                className={`mt-2 ${fieldClass} resize-y`}
+                placeholder="A few sentences about the role or project."
+              />
+              {errors.message ? (
+                <p id="message-error" className="mt-2 text-xs text-destructive">
+                  {errors.message}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                type="submit"
+                className="inline-flex min-h-12 items-center gap-2 bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                <Send className="size-4" aria-hidden="true" />
+                Compose message
+              </button>
+              <p aria-live="polite" className="text-xs text-muted-foreground">
+                {status === "sent"
+                  ? "Your email client should now be open with the message ready to send."
+                  : ""}
+              </p>
+            </div>
+          </form>
+        </Reveal>
+
+        <Reveal delay={100} className="space-y-px border border-border bg-border">
+          <a
+            href={`mailto:${profile.email}`}
+            className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
+          >
+            <Mail className="size-5 shrink-0" aria-hidden="true" />
+            <span className="min-w-0">
+              <span className="label-eyebrow block text-muted-foreground">Email</span>
+              <span className="block truncate text-sm">{profile.email}</span>
+            </span>
+          </a>
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
+          >
+            <Linkedin className="size-5 shrink-0" aria-hidden="true" />
+            <span className="min-w-0">
+              <span className="label-eyebrow block text-muted-foreground">LinkedIn</span>
+              <span className="block truncate text-sm">Md Walidur Rahman</span>
+            </span>
+            <ArrowUpRight className="ml-auto size-4 shrink-0" aria-hidden="true" />
+          </a>
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="flex items-center gap-4 bg-background p-5 transition-colors hover:text-primary"
+          >
+            <Github className="size-5 shrink-0" aria-hidden="true" />
+            <span className="min-w-0">
+              <span className="label-eyebrow block text-muted-foreground">GitHub</span>
+              <span className="block truncate text-sm">mdWalidur</span>
+            </span>
+            <ArrowUpRight className="ml-auto size-4 shrink-0" aria-hidden="true" />
+          </a>
+          <div className="bg-background p-5">
+            <span className="label-eyebrow block text-muted-foreground">Based in</span>
+            <span className="mt-1 block text-sm">{profile.location}</span>
+            <span className="mt-3 block text-sm text-muted-foreground">{profile.availability}</span>
+          </div>
+        </Reveal>
       </div>
-    </section>
+    </PortfolioSection>
   );
 }
