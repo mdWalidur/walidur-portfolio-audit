@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
+import type { HTMLAttributes } from "react";
 
+import { motionDuration, motionEasing, revealObserverOptions } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 
+/** Shared reveal wrapper for section content that animates in on first viewport entry. */
 export function Reveal({
   children,
   className,
   delay = 0,
   as: Tag = "div",
+  ...props
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   as?: ElementType;
-}) {
+} & HTMLAttributes<HTMLElement>) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -23,15 +27,12 @@ export function Reveal({
       setVisible(true);
       return;
     }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-    );
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]?.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, revealObserverOptions);
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
@@ -39,14 +40,24 @@ export function Reveal({
   return (
     <Tag
       ref={ref}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      style={
+        delay
+          ? {
+              transitionDelay: `${delay}ms`,
+              transitionDuration: `${motionDuration.slow}ms`,
+              transitionTimingFunction: motionEasing.smooth,
+            }
+          : undefined
+      }
       className={cn("reveal-init", visible && "reveal-in", className)}
+      {...props}
     >
       {children}
     </Tag>
   );
 }
 
+/** Heading pattern shared by each major portfolio section. */
 export function SectionHeading({
   eyebrow,
   title,
@@ -65,10 +76,7 @@ export function SectionHeading({
         <span className="label-eyebrow text-primary">{eyebrow}</span>
       </div>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end">
-        <h2
-          id={id}
-          className="text-balance text-3xl font-medium sm:text-4xl lg:text-5xl"
-        >
+        <h2 id={id} className="text-balance text-3xl font-medium sm:text-4xl lg:text-5xl">
           {title}
         </h2>
         {intro ? (

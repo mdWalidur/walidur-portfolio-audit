@@ -1,13 +1,23 @@
 import { ArrowDownRight, ArrowUpRight, Download, MapPin } from "lucide-react";
 
 import { profile } from "@/data/portfolio";
+import { LinkButton } from "./link-button";
+import { PortfolioSection } from "./section";
+import { StatGrid } from "./stat-grid";
 
+/** Main hero section with intro, primary actions, and profile image. */
 export function Hero() {
+  const stats = [
+    { label: "Studying", value: "BEng Information Technology" },
+    { label: "Focus", value: "Web · Cloud · DevOps" },
+    { label: "Credentials", value: "3× AWS Academy" },
+  ] as const;
+
   return (
-    <section
+    <PortfolioSection
       id="home"
-      aria-labelledby="hero-heading"
-      className="relative overflow-hidden border-b border-border pt-28 pb-16 sm:pt-36 sm:pb-24"
+      labelledBy="hero-heading"
+      className="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24"
     >
       <div className="tech-grid pointer-events-none absolute inset-0" aria-hidden="true" />
       <div
@@ -15,7 +25,7 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto grid max-w-[1440px] gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16 lg:px-12">
+      <div className="relative grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-16">
         <div>
           <p className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="label-eyebrow text-primary">{profile.subtitle}</span>
@@ -32,51 +42,37 @@ export function Hero() {
             {profile.name}
           </h1>
 
-          <p className="mt-5 max-w-xl text-lg text-foreground/85 sm:text-xl">
-            {profile.title}
-          </p>
+          <p className="mt-5 max-w-xl text-lg text-foreground/85 sm:text-xl">{profile.title}</p>
 
           <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
             {profile.valueProposition}
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
-            <a
+            <LinkButton
               href="#work"
-              className="inline-flex min-h-12 items-center gap-2 bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 active:opacity-80"
+              className="min-h-12 border-primary bg-primary px-6 font-medium text-primary-foreground hover:text-primary-foreground"
             >
               View my work
               <ArrowDownRight className="size-4" aria-hidden="true" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex min-h-12 items-center gap-2 border border-border px-6 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
-            >
+            </LinkButton>
+            <LinkButton href="#contact" className="min-h-12 px-6 font-medium">
               Contact me
               <ArrowUpRight className="size-4" aria-hidden="true" />
-            </a>
-            <a
+            </LinkButton>
+            <LinkButton
               href={profile.cv}
               download
-              className="inline-flex min-h-12 items-center gap-2 px-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="min-h-12 border-transparent px-4 text-muted-foreground hover:border-border hover:text-foreground"
             >
               <Download className="size-4" aria-hidden="true" />
               Download CV
-            </a>
+            </LinkButton>
           </div>
 
-          <dl className="mt-12 grid max-w-xl grid-cols-2 gap-px border border-border bg-border sm:grid-cols-3">
-            {[
-              { k: "Studying", v: "BEng Information Technology" },
-              { k: "Focus", v: "Web · Cloud · DevOps" },
-              { k: "Credentials", v: "3× AWS Academy" },
-            ].map((stat) => (
-              <div key={stat.k} className="bg-background p-4">
-                <dt className="label-eyebrow text-muted-foreground">{stat.k}</dt>
-                <dd className="mt-2 text-sm text-foreground">{stat.v}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-12">
+            <StatGrid stats={stats} />
+          </div>
         </div>
 
         <div className="relative">
@@ -109,6 +105,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-    </section>
+    </PortfolioSection>
   );
 }

@@ -1,54 +1,35 @@
 import { ArrowUpRight, Github } from "lucide-react";
 
-import { projects, type Project } from "@/data/portfolio";
-import { Reveal, SectionHeading } from "./reveal";
+import { getFeaturedProject, getNonFeaturedProjects, projects } from "@/data";
+import { getStaggerDelay } from "@/lib/animation";
+import type { Project } from "@/types";
 
-function Links({ project }: { project: Project }) {
+import { LinkButton } from "./link-button";
+import { PortfolioSection } from "./section";
+import { ProjectCard } from "./project-card";
+import { Reveal, SectionHeading } from "./reveal";
+import { TagList } from "./tag-list";
+
+function ProjectLinks({ project }: { project: Project }) {
   return (
     <div className="flex flex-wrap gap-3">
       {project.liveUrl ? (
-        <a
-          href={project.liveUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="inline-flex min-h-11 items-center gap-2 border border-border px-4 text-sm transition-colors hover:border-primary hover:text-primary"
-        >
+        <LinkButton href={project.liveUrl} external>
           Live demo
           <ArrowUpRight className="size-4" aria-hidden="true" />
-          <span className="sr-only">(opens in a new tab)</span>
-        </a>
+        </LinkButton>
       ) : null}
       {project.githubUrl ? (
-        <a
-          href={project.githubUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="inline-flex min-h-11 items-center gap-2 border border-border px-4 text-sm transition-colors hover:border-primary hover:text-primary"
-        >
+        <LinkButton href={project.githubUrl} external>
           <Github className="size-4" aria-hidden="true" />
           Source
-          <span className="sr-only">(opens in a new tab)</span>
-        </a>
+        </LinkButton>
       ) : null}
     </div>
   );
 }
 
-function Tags({ tags }: { tags: string[] }) {
-  return (
-    <ul className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <li
-          key={tag}
-          className="border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
-        >
-          {tag}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
+/** Featured and supporting project listing section. */
 function FeaturedProject({ project }: { project: Project }) {
   return (
     <Reveal as="article" className="border border-border bg-surface">
@@ -64,9 +45,7 @@ function FeaturedProject({ project }: { project: Project }) {
           <dl className="mt-8 space-y-6">
             <div>
               <dt className="label-eyebrow text-muted-foreground">Problem</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-foreground/85">
-                {project.problem}
-              </dd>
+              <dd className="mt-2 text-sm leading-relaxed text-foreground/85">{project.problem}</dd>
             </div>
             <div>
               <dt className="label-eyebrow text-muted-foreground">Solution</dt>
@@ -76,15 +55,13 @@ function FeaturedProject({ project }: { project: Project }) {
             </div>
             <div>
               <dt className="label-eyebrow text-muted-foreground">Result</dt>
-              <dd className="mt-2 text-sm leading-relaxed text-foreground/85">
-                {project.result}
-              </dd>
+              <dd className="mt-2 text-sm leading-relaxed text-foreground/85">{project.result}</dd>
             </div>
           </dl>
 
           <div className="mt-8 space-y-5">
-            <Tags tags={project.tags} />
-            <Links project={project} />
+            <TagList tags={project.tags} />
+            <ProjectLinks project={project} />
           </div>
         </div>
 
@@ -125,54 +102,32 @@ function ProjectRow({ project, delay }: { project: Project; delay: number }) {
     <Reveal
       as="article"
       delay={delay}
+      aria-label={`Project: ${project.title}`}
       className="grid gap-6 border border-border p-6 transition-colors hover:border-primary/50 sm:p-8 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]"
     >
-      <div>
-        <div className="mb-4 flex items-center gap-3">
-          <span className="font-mono text-xs text-primary">{project.number}</span>
-          <span className="label-eyebrow text-muted-foreground">{project.category}</span>
-        </div>
-        <h3 className="text-xl font-medium sm:text-2xl">{project.title}</h3>
-        <div className="mt-5">
-          <Tags tags={project.tags} />
-        </div>
-      </div>
-      <div className="space-y-5">
-        <p className="text-sm leading-relaxed text-foreground/85">{project.solution}</p>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          <span className="text-foreground">Result — </span>
-          {project.result}
-        </p>
-        <Links project={project} />
-      </div>
+      <ProjectCard project={project} />
     </Reveal>
   );
 }
 
 export function Work() {
-  const featured = (projects.find((p) => p.featured) ?? projects[0]) as Project;
-  const rest = projects.filter((p) => p.id !== featured.id);
+  const featured = getFeaturedProject(projects);
+  const rest = getNonFeaturedProjects(projects);
 
   return (
-    <section
-      id="work"
-      aria-labelledby="work-heading"
-      className="scroll-mt-20 border-b border-border px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
-    >
-      <div className="mx-auto max-w-[1440px]">
-        <SectionHeading
-          id="work-heading"
-          eyebrow="Selected work"
-          title="Projects built to understand a system, not to fill a page."
-          intro="Each project starts from a concrete problem. Below: what it solves, how it is put together, and what came out of it."
-        />
-        <div className="space-y-6">
-          <FeaturedProject project={featured} />
-          {rest.map((project, i) => (
-            <ProjectRow key={project.id} project={project} delay={i * 80} />
-          ))}
-        </div>
+    <PortfolioSection id="work" labelledBy="work-heading">
+      <SectionHeading
+        id="work-heading"
+        eyebrow="Selected work"
+        title="Projects built to understand a system, not to fill a page."
+        intro="Each project starts from a concrete problem. Below: what it solves, how it is put together, and what came out of it."
+      />
+      <div className="space-y-6">
+        <FeaturedProject project={featured} />
+        {rest.map((project, i) => (
+          <ProjectRow key={project.id} project={project} delay={getStaggerDelay(i)} />
+        ))}
       </div>
-    </section>
+    </PortfolioSection>
   );
 }

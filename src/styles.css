@@ -161,6 +161,13 @@
 [data-theme="obsidian"] {
   color-scheme: dark;
   --radius: 0.25rem;
+  --space-section-x: clamp(1.25rem, 4vw, 3rem);
+  --space-section-y: clamp(5rem, 8vw, 7rem);
+  --motion-duration-fast: 180ms;
+  --motion-duration-base: 360ms;
+  --motion-duration-slow: 700ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --motion-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --gold: oklch(0.78 0.13 82);
   --background: oklch(0.16 0.004 250);
   --foreground: oklch(0.96 0.004 95);
@@ -285,7 +292,10 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.03em;
   }
@@ -298,8 +308,12 @@
     outline-offset: 3px;
   }
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.001ms !important;
       transition-duration: 0.001ms !important;
     }
@@ -325,11 +339,26 @@
   opacity: 0;
   transform: translateY(18px);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity var(--motion-duration-slow) var(--motion-ease-smooth),
+    transform var(--motion-duration-slow) var(--motion-ease-smooth);
 }
 
 @utility reveal-in {
   opacity: 1;
   transform: none;
+}
+
+@utility page-transition {
+  animation: page-enter var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0.5;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
