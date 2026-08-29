@@ -150,7 +150,7 @@ function ProjectRow({ project, delay }: { project: Project; delay: number }) {
 }
 
 export function Work() {
-  const featured = projects.find((p) => p.featured) ?? projects[0];
+  const featured = (projects.find((p) => p.featured) ?? projects[0]) as Project;
   const rest = projects.filter((p) => p.id !== featured.id);
 
   return (

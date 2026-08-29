@@ -47,7 +47,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset['theme'] = theme;
     try {
       window.localStorage.setItem(STORAGE_KEY, theme);
     } catch {
